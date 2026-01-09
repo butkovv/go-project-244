@@ -33,16 +33,14 @@ func main() {
 	cmd := &cli.Command{
 		Name:  "gendiff",
 		Usage: "Compares two configuration files and shows a difference.",
-		// Action: func(ctx context.Context, cmd *cli.Command) error {
-		// 	path1 := cmd.Args().Get(0)
-		// 	path2 := cmd.Args().Get(0)
-		// 	size, err := code.GenDiff(path1, path2)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// 	fmt.Printf("%s	%s\n", size, path)
-		// 	return nil
-		// },
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "format",
+				Aliases: []string{"f"},
+				Value:   "stylish",
+				Usage:   "output format",
+			},
+		},
 	}
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		slog.Error(err.Error())

@@ -1,30 +1,12 @@
-/*
-hexlet-path-size calculates size of a given path.
-
-Given a file, it calculates the size of the file; given a directory, it calculates the size of all files in
-that directory. By default it does not scan the directory recursively and does not include hidden files.
-
-Usage:
-
-	hexlet-path-size [path] [flags]
-
-The flags are:
-
-	   --recursive, -r
-		 									recursive size of directories (default: false)
-	   --human, -H
-		 									human-readable sizes (auto-select unit) (default: false)
-	   --all, -a
-		 									include hidden files and directories (default: false)
-	   --help, -h
-		 									show help
-*/
 package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"log/slog"
 	"os"
+	"path/filepath"
 
 	"github.com/urfave/cli/v3"
 )
@@ -40,6 +22,29 @@ func main() {
 				Value:   "stylish",
 				Usage:   "output format",
 			},
+		},
+		Action: func(ctx context.Context, cmd *cli.Command) error {
+			path1 := cmd.Args().Get(0)
+			path2 := cmd.Args().Get(1)
+			ext1 := filepath.Ext(path1)
+			ext2 := filepath.Ext(path2)
+			if ext1 != ext2 {
+				return errors.New("Файлы имеют разные расширения")
+			}
+			if ext1 == ".json" {
+				var err error
+				var json1, json2 map[string]any
+				json1, err = ParseJsonFromFile(path1)
+				if err != nil {
+					return err
+				}
+				json2, err = ParseJsonFromFile(path2)
+				if err != nil {
+					return err
+				}
+				fmt.Printf("%v, %v\n", json1, json2)
+			}
+			return nil
 		},
 	}
 	if err := cmd.Run(context.Background(), os.Args); err != nil {

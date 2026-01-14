@@ -42,7 +42,8 @@ func main() {
 				if err != nil {
 					return err
 				}
-				fmt.Printf("%v, %v\n", json1, json2)
+				res := Compare(json1, json2)
+				fmt.Print(res)
 			}
 			return nil
 		},

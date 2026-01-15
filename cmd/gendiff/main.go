@@ -29,7 +29,7 @@ func main() {
 			ext1 := filepath.Ext(path1)
 			ext2 := filepath.Ext(path2)
 			if ext1 != ext2 {
-				return errors.New("Файлы имеют разные расширения")
+				return errors.New("файлы имеют разные расширения")
 			}
 			if ext1 == ".json" {
 				var err error

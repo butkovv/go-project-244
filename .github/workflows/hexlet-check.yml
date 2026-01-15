@@ -33,11 +33,8 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.55.2
-          args: --timeout=5m
+      - name: linting
+        run: make lint
   test:
     runs-on: ubuntu-latest
     steps:

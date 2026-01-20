@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
-	"path/filepath"
 
 	"github.com/urfave/cli/v3"
 )
@@ -26,25 +24,18 @@ func main() {
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path1 := cmd.Args().Get(0)
 			path2 := cmd.Args().Get(1)
-			ext1 := filepath.Ext(path1)
-			ext2 := filepath.Ext(path2)
-			if ext1 != ext2 {
-				return errors.New("файлы имеют разные расширения")
+			var err error
+			var original, changed map[string]any
+			original, err = ParseDataFromFile(path1)
+			if err != nil {
+				return err
 			}
-			if ext1 == ".json" {
-				var err error
-				var json1, json2 map[string]any
-				json1, err = ParseJsonFromFile(path1)
-				if err != nil {
-					return err
-				}
-				json2, err = ParseJsonFromFile(path2)
-				if err != nil {
-					return err
-				}
-				res := Compare(json1, json2)
-				fmt.Print(res)
+			changed, err = ParseDataFromFile(path2)
+			if err != nil {
+				return err
 			}
+			res := Compare(original, changed)
+			fmt.Print(res)
 			return nil
 		},
 	}

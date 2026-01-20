@@ -10,9 +10,23 @@ func TestCompare(t *testing.T) {
 		want  string
 	}{
 		{
-			name:  "Basic",
+			name:  "Basic JSON",
 			path1: "../../testdata/fixture/file1.json",
 			path2: "../../testdata/fixture/file2.json",
+			want: `{
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
+}
+`,
+		},
+		{
+			name:  "Basic YAML",
+			path1: "../../testdata/fixture/file1.yaml",
+			path2: "../../testdata/fixture/file2.yaml",
 			want: `{
   - follow: false
     host: hexlet.io
@@ -66,11 +80,11 @@ func TestCompare(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			var err error
 			var j1, j2 map[string]any
-			j1, err = ParseJsonFromFile(c.path1)
+			j1, err = ParseDataFromFile(c.path1)
 			if err != nil {
 				t.Fatalf("не ожидали ошибку, получили %q", err.Error())
 			}
-			j2, err = ParseJsonFromFile(c.path2)
+			j2, err = ParseDataFromFile(c.path2)
 			if err != nil {
 				t.Fatalf("не ожидали ошибку, получили %q", err.Error())
 			}

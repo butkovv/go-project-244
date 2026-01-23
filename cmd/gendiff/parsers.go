@@ -17,10 +17,11 @@ func ParseDataFromFile(path string) (map[string]any, error) {
 	}
 
 	ext := filepath.Ext(path)
+
 	switch ext {
-	case "json":
+	case ".json":
 		err = json.Unmarshal(data, &res)
-	case "yaml", "yml":
+	case ".yaml", ".yml":
 		err = yaml.Unmarshal(data, &res)
 	}
 	if err != nil {

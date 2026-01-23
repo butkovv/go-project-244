@@ -35,7 +35,8 @@ func main() {
 				return err
 			}
 			res := Compare(original, changed)
-			fmt.Print(res)
+			fr := FormatDiff(res)
+			fmt.Print(fr)
 			return nil
 		},
 	}

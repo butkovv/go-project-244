@@ -3,46 +3,75 @@ package main
 import (
 	"fmt"
 	"maps"
+	"reflect"
 	"slices"
 )
 
 type DiffStatus string
 
+type DiffEntry struct {
+	Status      string
+	FirstValue  any
+	SecondValue any
+	Level       int
+	IsNested    bool
+	Diff        map[string]DiffEntry
+}
+
 const (
 	StatusAdded     DiffStatus = "+"
 	StatusRemoved   DiffStatus = "-"
 	StatusUnchanged DiffStatus = " "
+	StatusChanged   DiffStatus = " "
 )
 
 func createLine(key string, value any, status DiffStatus) string {
 	return fmt.Sprintf("  %s %s: %v\n", status, key, value)
 }
 
-func Compare(first, second map[string]any) string {
-	res := "{\n"
+func IsMap(v any) bool {
+	if v == nil {
+		return false
+	}
+	return reflect.TypeOf(v).Kind() == reflect.Map
+}
+
+func getDiff(first, second map[string]any, level int) map[string]DiffEntry {
+	res := make(map[string]DiffEntry)
 
 	keys := append(slices.Collect(maps.Keys(first)), slices.Collect(maps.Keys(second))...)
 	slices.Sort(keys)
 	keys = slices.Compact(keys)
 	slices.Sort(keys)
-
 	for _, k := range keys {
 		v1, ok1 := first[k]
 		v2, ok2 := second[k]
 		if !ok1 && ok2 {
-			res += createLine(k, v2, StatusAdded)
+			res[k] = DiffEntry{Status: "added", FirstValue: nil, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
 		}
 		if !ok2 && ok1 {
-			res += createLine(k, v1, StatusRemoved)
+			res[k] = DiffEntry{Status: "removed", FirstValue: v1, SecondValue: nil, Level: level, IsNested: false, Diff: nil}
 		}
-		if ok1 && ok2 && v1 != v2 {
-			res += createLine(k, v1, StatusRemoved)
-			res += createLine(k, v2, StatusAdded)
+		if ok1 && ok2 && IsMap(v1) && IsMap(v2) {
+			m1, ok1 := v1.(map[string]any)
+			m2, ok2 := v2.(map[string]any)
+			if reflect.DeepEqual(m1, m2) {
+				res[k] = DiffEntry{Status: "unchanged", FirstValue: v1, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
+			} else if ok1 && ok2 {
+				res[k] = DiffEntry{Status: "changed", FirstValue: v1, SecondValue: v2, Level: level, IsNested: true, Diff: getDiff(m1, m2, level+1)}
+			}
 		}
-		if ok1 && ok2 && v1 == v2 {
-			res += createLine(k, v1, StatusUnchanged)
+		if ok1 && ok2 && ((IsMap(v1) && !IsMap(v2)) || (!IsMap(v1) && IsMap(v2)) || (!IsMap(v1) && !IsMap(v2) && v1 != v2)) {
+			res[k] = DiffEntry{Status: "changed", FirstValue: v1, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
+		}
+		if ok1 && ok2 && !IsMap(v1) && !IsMap(v2) && v1 == v2 {
+			res[k] = DiffEntry{Status: "unchanged", FirstValue: v1, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
 		}
 	}
-	res += "}\n"
 	return res
+}
+
+func Compare(first, second map[string]any) map[string]DiffEntry {
+	level := 0
+	return getDiff(first, second, level)
 }

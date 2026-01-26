@@ -6,6 +6,10 @@ import (
 	"log/slog"
 	"os"
 
+	"code/modules/compare"
+	"code/modules/formatters"
+	"code/modules/parsers"
+
 	"github.com/urfave/cli/v3"
 )
 
@@ -26,16 +30,16 @@ func main() {
 			path2 := cmd.Args().Get(1)
 			var err error
 			var original, changed map[string]any
-			original, err = ParseDataFromFile(path1)
+			original, err = parsers.ParseDataFromFile(path1)
 			if err != nil {
 				return err
 			}
-			changed, err = ParseDataFromFile(path2)
+			changed, err = parsers.ParseDataFromFile(path2)
 			if err != nil {
 				return err
 			}
-			res := Compare(original, changed)
-			fr := FormatDiff(res)
+			res := compare.Compare(original, changed)
+			fr := formatters.FormatDiff(res)
 			fmt.Print(fr)
 			return nil
 		},

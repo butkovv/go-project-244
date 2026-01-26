@@ -1,4 +1,4 @@
-package main
+package parsers
 
 import (
 	"encoding/json"
@@ -27,6 +27,5 @@ func ParseDataFromFile(path string) (map[string]any, error) {
 	if err != nil {
 		return res, err
 	}
-
 	return res, nil
 }

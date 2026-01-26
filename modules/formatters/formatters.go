@@ -1,9 +1,11 @@
-package main
+package formatters
 
 import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"code/modules/compare"
 )
 
 const INDENT_LENGTH = 4
@@ -48,7 +50,7 @@ func formatLineStylish(key string, v any, marker string, level int, offset strin
 	return offset + marker + key + ": " + value
 }
 
-func FormatStylish(diff map[string]DiffEntry, level int) string {
+func FormatStylish(diff map[string]compare.DiffEntry, level int) string {
 	diffKeys := make([]string, 0, len(diff))
 	for key := range diff {
 		diffKeys = append(diffKeys, key)
@@ -104,7 +106,7 @@ func FormatStylish(diff map[string]DiffEntry, level int) string {
 	return res
 }
 
-func FormatDiff(diff map[string]DiffEntry) string {
+func FormatDiff(diff map[string]compare.DiffEntry) string {
 	level := 0
 	return FormatStylish(diff, level)
 }

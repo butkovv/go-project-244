@@ -61,37 +61,37 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 	for _, key := range diffKeys {
 		v := diff[key]
 		var offset string
-		if v.Level == 0 {
+		if level == 0 {
 			offset = ""
 		} else {
-			offset = strings.Repeat(" ", v.Level*INDENT_LENGTH)
+			offset = strings.Repeat(" ", level*INDENT_LENGTH)
 		}
 		var marker string
 		if v.Status == "added" {
 			marker = "+ "
-			added := formatLineStylish(key, v.SecondValue, marker, v.Level, offset)
+			added := formatLineStylish(key, v.SecondValue, marker, level, offset)
 			res += added
 		}
 		if v.Status == "removed" {
 			marker = "- "
-			removed := formatLineStylish(key, v.FirstValue, marker, v.Level, offset)
+			removed := formatLineStylish(key, v.FirstValue, marker, level, offset)
 			res += removed
 		}
 		if v.Status == "unchanged" {
 			marker = "  "
-			unchanged := formatLineStylish(key, v.FirstValue, marker, v.Level, offset)
+			unchanged := formatLineStylish(key, v.FirstValue, marker, level, offset)
 			res += unchanged
 		}
 		if v.Status == "changed" && !v.IsNested {
 			marker = "- "
-			removed := formatLineStylish(key, v.FirstValue, marker, v.Level, offset)
+			removed := formatLineStylish(key, v.FirstValue, marker, level, offset)
 			res += removed
 			marker = "+ "
-			added := formatLineStylish(key, v.SecondValue, marker, v.Level, offset)
+			added := formatLineStylish(key, v.SecondValue, marker, level, offset)
 			res += added
 		}
 		if v.Status == "changed" && v.IsNested {
-			changed := formatDiffStylish(v.Diff, v.Level+1)
+			changed := formatDiffStylish(v.Diff, level+1)
 			marker = "  "
 			res += offset + marker + key + ": " + changed
 		}

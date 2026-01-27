@@ -12,7 +12,6 @@ type DiffEntry struct {
 	Status      string
 	FirstValue  any
 	SecondValue any
-	Level       int
 	IsNested    bool
 	Diff        map[string]DiffEntry
 }
@@ -31,7 +30,7 @@ func IsMap(v any) bool {
 	return reflect.TypeOf(v).Kind() == reflect.Map
 }
 
-func getDiff(first, second map[string]any, level int) map[string]DiffEntry {
+func Compare(first, second map[string]any) map[string]DiffEntry {
 	res := make(map[string]DiffEntry)
 
 	keys := append(slices.Collect(maps.Keys(first)), slices.Collect(maps.Keys(second))...)
@@ -42,31 +41,26 @@ func getDiff(first, second map[string]any, level int) map[string]DiffEntry {
 		v1, ok1 := first[k]
 		v2, ok2 := second[k]
 		if !ok1 && ok2 {
-			res[k] = DiffEntry{Status: "added", FirstValue: nil, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
+			res[k] = DiffEntry{Status: "added", FirstValue: nil, SecondValue: v2, IsNested: false, Diff: nil}
 		}
 		if !ok2 && ok1 {
-			res[k] = DiffEntry{Status: "removed", FirstValue: v1, SecondValue: nil, Level: level, IsNested: false, Diff: nil}
+			res[k] = DiffEntry{Status: "removed", FirstValue: v1, SecondValue: nil, IsNested: false, Diff: nil}
 		}
 		if ok1 && ok2 && IsMap(v1) && IsMap(v2) {
 			m1, ok1 := v1.(map[string]any)
 			m2, ok2 := v2.(map[string]any)
 			if reflect.DeepEqual(m1, m2) {
-				res[k] = DiffEntry{Status: "unchanged", FirstValue: v1, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
+				res[k] = DiffEntry{Status: "unchanged", FirstValue: v1, SecondValue: v2, IsNested: false, Diff: nil}
 			} else if ok1 && ok2 {
-				res[k] = DiffEntry{Status: "changed", FirstValue: v1, SecondValue: v2, Level: level, IsNested: true, Diff: getDiff(m1, m2, level+1)}
+				res[k] = DiffEntry{Status: "changed", FirstValue: v1, SecondValue: v2, IsNested: true, Diff: Compare(m1, m2)}
 			}
 		}
 		if ok1 && ok2 && ((IsMap(v1) && !IsMap(v2)) || (!IsMap(v1) && IsMap(v2)) || (!IsMap(v1) && !IsMap(v2) && v1 != v2)) {
-			res[k] = DiffEntry{Status: "changed", FirstValue: v1, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
+			res[k] = DiffEntry{Status: "changed", FirstValue: v1, SecondValue: v2, IsNested: false, Diff: nil}
 		}
 		if ok1 && ok2 && !IsMap(v1) && !IsMap(v2) && v1 == v2 {
-			res[k] = DiffEntry{Status: "unchanged", FirstValue: v1, SecondValue: v2, Level: level, IsNested: false, Diff: nil}
+			res[k] = DiffEntry{Status: "unchanged", FirstValue: v1, SecondValue: v2, IsNested: false, Diff: nil}
 		}
 	}
 	return res
-}
-
-func Compare(first, second map[string]any) map[string]DiffEntry {
-	level := 0
-	return getDiff(first, second, level)
 }

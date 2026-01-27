@@ -1,7 +1,6 @@
 package compare
 
 import (
-	"fmt"
 	"maps"
 	"reflect"
 	"slices"
@@ -24,10 +23,6 @@ const (
 	StatusUnchanged DiffStatus = " "
 	StatusChanged   DiffStatus = " "
 )
-
-func createLine(key string, value any, status DiffStatus) string {
-	return fmt.Sprintf("  %s %s: %v\n", status, key, value)
-}
 
 func IsMap(v any) bool {
 	if v == nil {

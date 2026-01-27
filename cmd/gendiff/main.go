@@ -29,7 +29,7 @@ func main() {
 			format := cmd.String("format")
 			diff, err := code.GenDiff(path1, path2, format)
 			if err != nil {
-				fmt.Printf("An error occured: %v", err.Error())
+				return fmt.Errorf("gendiff: %w", err)
 			}
 			fmt.Print(diff)
 			return nil
@@ -37,5 +37,6 @@ func main() {
 	}
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		slog.Error(err.Error())
+		os.Exit(1)
 	}
 }

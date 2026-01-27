@@ -6,9 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"code/modules/compare"
-	"code/modules/formatters"
-	"code/modules/parsers"
+	"code"
 
 	"github.com/urfave/cli/v3"
 )
@@ -28,19 +26,12 @@ func main() {
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path1 := cmd.Args().Get(0)
 			path2 := cmd.Args().Get(1)
-			var err error
-			var original, changed map[string]any
-			original, err = parsers.ParseDataFromFile(path1)
+			format := cmd.String("format")
+			diff, err := code.GenDiff(path1, path2, format)
 			if err != nil {
-				return err
+				fmt.Printf("An error occured: %v", err.Error())
 			}
-			changed, err = parsers.ParseDataFromFile(path2)
-			if err != nil {
-				return err
-			}
-			res := compare.Compare(original, changed)
-			fr := formatters.FormatDiff(res)
-			fmt.Print(fr)
+			fmt.Print(diff)
 			return nil
 		},
 	}

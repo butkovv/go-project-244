@@ -6,7 +6,7 @@ import (
 	"code/modules/parsers"
 )
 
-func GenDiff(path1, path2 string) (string, error) {
+func GenDiff(path1, path2, format string) (string, error) {
 	var err error
 	var original, changed map[string]any
 	original, err = parsers.ParseDataFromFile(path1)
@@ -18,6 +18,6 @@ func GenDiff(path1, path2 string) (string, error) {
 		return "", err
 	}
 	res := compare.Compare(original, changed)
-	fr := formatters.FormatDiff(res)
+	fr := formatters.Render(res, format)
 	return fr, nil
 }

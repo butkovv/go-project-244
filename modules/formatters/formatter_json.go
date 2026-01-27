@@ -26,7 +26,7 @@ func formatDiffJSON(diff map[string]compare.DiffEntry) []JSONDiffElement {
 	for _, key := range diffKeys {
 		el := JSONDiffElement{
 			Key:      key,
-			Status:   compare.DiffStatus(diff[key].Status),
+			Status:   diff[key].Status,
 			OldValue: diff[key].FirstValue,
 			NewValue: diff[key].SecondValue,
 			Children: formatDiffJSON(diff[key].Diff),

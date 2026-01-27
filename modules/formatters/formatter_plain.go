@@ -38,19 +38,19 @@ func formatDiffPlain(diff map[string]compare.DiffEntry, parentDir string) string
 		v.FirstValue = formatValuePlain(v.FirstValue)
 		v.SecondValue = formatValuePlain(v.SecondValue)
 
-		if v.Status == "added" {
+		if v.Status == compare.StatusAdded {
 			added := fmt.Sprintf("Property '%s' was added with value: %v\n", property, v.SecondValue)
 			res += added
 		}
-		if v.Status == "removed" {
+		if v.Status == compare.StatusRemoved {
 			removed := fmt.Sprintf("Property '%s' was removed\n", property)
 			res += removed
 		}
-		if v.Status == "changed" && !v.IsNested {
+		if v.Status == compare.StatusChanged && !v.IsNested {
 			changed := fmt.Sprintf("Property '%s' was updated. From %v to %v\n", property, v.FirstValue, v.SecondValue)
 			res += changed
 		}
-		if v.Status == "changed" && v.IsNested {
+		if v.Status == compare.StatusChanged && v.IsNested {
 			changed := formatDiffPlain(v.Diff, property)
 			res += changed
 		}

@@ -67,22 +67,22 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 			offset = strings.Repeat(" ", level*INDENT_LENGTH)
 		}
 		var marker string
-		if v.Status == "added" {
+		if v.Status == compare.StatusAdded {
 			marker = "+ "
 			added := formatLineStylish(key, v.SecondValue, marker, level, offset)
 			res += added
 		}
-		if v.Status == "removed" {
+		if v.Status == compare.StatusRemoved {
 			marker = "- "
 			removed := formatLineStylish(key, v.FirstValue, marker, level, offset)
 			res += removed
 		}
-		if v.Status == "unchanged" {
+		if v.Status == compare.StatusUnchanged {
 			marker = "  "
 			unchanged := formatLineStylish(key, v.FirstValue, marker, level, offset)
 			res += unchanged
 		}
-		if v.Status == "changed" && !v.IsNested {
+		if v.Status == compare.StatusChanged && !v.IsNested {
 			marker = "- "
 			removed := formatLineStylish(key, v.FirstValue, marker, level, offset)
 			res += removed
@@ -90,7 +90,7 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 			added := formatLineStylish(key, v.SecondValue, marker, level, offset)
 			res += added
 		}
-		if v.Status == "changed" && v.IsNested {
+		if v.Status == compare.StatusChanged && v.IsNested {
 			changed := formatDiffStylish(v.Diff, level+1)
 			marker = "  "
 			res += offset + marker + key + ": " + changed

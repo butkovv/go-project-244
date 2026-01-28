@@ -21,9 +21,9 @@ func formatMapStylish(m map[string]any, level int) string {
 		v := m[key]
 		var value, offset, marker string
 		if level == 0 {
-			offset = ""
+			offset = strings.Repeat(" ", INDENT_LENGTH-2)
 		} else {
-			offset = strings.Repeat(" ", level*INDENT_LENGTH)
+			offset = strings.Repeat(" ", level*INDENT_LENGTH-2)
 		}
 		if mapValue, ok := v.(map[string]any); ok {
 			value = formatMapStylish(mapValue, level+1)
@@ -33,7 +33,7 @@ func formatMapStylish(m map[string]any, level int) string {
 		marker = "  "
 		res += offset + marker + key + ": " + value
 	}
-	offset := strings.Repeat(" ", (level)*INDENT_LENGTH-2)
+	offset := strings.Repeat(" ", (level-1)*INDENT_LENGTH)
 	res += offset + "}\n"
 	return res
 }
@@ -62,9 +62,9 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 		v := diff[key]
 		var offset string
 		if level == 0 {
-			offset = ""
+			offset = strings.Repeat(" ", INDENT_LENGTH-2)
 		} else {
-			offset = strings.Repeat(" ", level*INDENT_LENGTH)
+			offset = strings.Repeat(" ", level*INDENT_LENGTH-2)
 		}
 		var marker string
 		if v.Status == compare.StatusAdded {
@@ -98,15 +98,15 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 	}
 	var offset string
 	if level == 0 {
-		offset = ""
+		offset = strings.Repeat(" ", INDENT_LENGTH-2)
 	} else {
-		offset = strings.Repeat(" ", level*INDENT_LENGTH-2)
+		offset = strings.Repeat(" ", (level-1)*INDENT_LENGTH)
 	}
 	res += offset + "}\n"
 	return res
 }
 
 func FormatStylish(diff map[string]compare.DiffEntry) string {
-	level := 0
+	level := 1
 	return formatDiffStylish(diff, level)
 }

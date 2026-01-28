@@ -17,50 +17,7 @@ func TestFormatStylish(t *testing.T) {
 		{
 			name: "Basic",
 			diff: map[string]compare.DiffEntry{"common": {Status: compare.StatusChanged, FirstValue: map[string]interface{}{"setting1": "Value 1", "setting2": 200, "setting3": true, "setting6": map[string]interface{}{"doge": map[string]interface{}{"wow": ""}, "key": "value"}}, SecondValue: map[string]interface{}{"follow": false, "setting1": "Value 1", "setting3": interface{}(nil), "setting4": "blah blah", "setting5": map[string]interface{}{"key5": "value5"}, "setting6": map[string]interface{}{"doge": map[string]interface{}{"wow": "so much"}, "key": "value", "ops": "vops"}}, IsNested: true, Diff: map[string]compare.DiffEntry{"follow": {Status: compare.StatusAdded, FirstValue: interface{}(nil), SecondValue: false, IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "setting1": {Status: compare.StatusUnchanged, FirstValue: "Value 1", SecondValue: "Value 1", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "setting2": {Status: compare.StatusRemoved, FirstValue: 200, SecondValue: interface{}(nil), IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "setting3": {Status: compare.StatusChanged, FirstValue: true, SecondValue: interface{}(nil), IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "setting4": {Status: compare.StatusAdded, FirstValue: interface{}(nil), SecondValue: "blah blah", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "setting5": {Status: compare.StatusAdded, FirstValue: interface{}(nil), SecondValue: map[string]interface{}{"key5": "value5"}, IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "setting6": {Status: compare.StatusChanged, FirstValue: map[string]interface{}{"doge": map[string]interface{}{"wow": ""}, "key": "value"}, SecondValue: map[string]interface{}{"doge": map[string]interface{}{"wow": "so much"}, "key": "value", "ops": "vops"}, IsNested: true, Diff: map[string]compare.DiffEntry{"doge": {Status: compare.StatusChanged, FirstValue: map[string]interface{}{"wow": ""}, SecondValue: map[string]interface{}{"wow": "so much"}, IsNested: true, Diff: map[string]compare.DiffEntry{"wow": {Status: compare.StatusChanged, FirstValue: "", SecondValue: "so much", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}}}, "key": {Status: compare.StatusUnchanged, FirstValue: "value", SecondValue: "value", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "ops": {Status: compare.StatusAdded, FirstValue: interface{}(nil), SecondValue: "vops", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}}}}}, "group1": {Status: compare.StatusChanged, FirstValue: map[string]interface{}{"baz": "bas", "foo": "bar", "nest": map[string]interface{}{"key": "value"}}, SecondValue: map[string]interface{}{"baz": "bars", "foo": "bar", "nest": "str"}, IsNested: true, Diff: map[string]compare.DiffEntry{"baz": {Status: compare.StatusChanged, FirstValue: "bas", SecondValue: "bars", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "foo": {Status: compare.StatusUnchanged, FirstValue: "bar", SecondValue: "bar", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "nest": {Status: compare.StatusChanged, FirstValue: map[string]interface{}{"key": "value"}, SecondValue: "str", IsNested: false, Diff: map[string]compare.DiffEntry(nil)}}}, "group2": {Status: compare.StatusRemoved, FirstValue: map[string]interface{}{"abc": 12345, "deep": map[string]interface{}{"id": 45}}, SecondValue: interface{}(nil), IsNested: false, Diff: map[string]compare.DiffEntry(nil)}, "group3": {Status: compare.StatusAdded, FirstValue: interface{}(nil), SecondValue: map[string]interface{}{"deep": map[string]interface{}{"id": map[string]interface{}{"number": 45}}, "fee": 100500}, IsNested: false, Diff: map[string]compare.DiffEntry(nil)}},
-			want: `{
-  common: {
-    + follow: false
-      setting1: Value 1
-    - setting2: 200
-    - setting3: true
-    + setting3: null
-    + setting4: blah blah
-    + setting5: {
-          key5: value5
-      }
-      setting6: {
-          doge: {
-            - wow: 
-            + wow: so much
-          }
-          key: value
-        + ops: vops
-      }
-  }
-  group1: {
-    - baz: bas
-    + baz: bars
-      foo: bar
-    - nest: {
-          key: value
-      }
-    + nest: str
-  }
-- group2: {
-      abc: 12345
-      deep: {
-          id: 45
-      }
-  }
-+ group3: {
-      deep: {
-          id: {
-              number: 45
-          }
-      }
-      fee: 100500
-  }
-}
+			want: `"{\n    common: {\n      + follow: false\n        setting1: Value 1\n      - setting2: 200\n      - setting3: true\n      + setting3: {\n            key: value\n        }\n      + setting4: blah blah\n      + setting5: {\n            key5: value5\n        }\n        setting6: {\n            doge: {\n              - wow: too much\n              + wow: so much\n            }\n            key: value\n          + ops: vops\n        }\n    }\n    group1: {\n      - baz: bas\n      + baz: bars\n        foo: bar\n      - nest: {\n            key: value\n        }\n      + nest: str\n    }\n  - group2: {\n        abc: 12345\n        deep: {\n            id: 45\n        }\n    }\n  + group3: {\n        deep: {\n            id: {\n                number: 45\n            }\n        }\n        fee: 100500\n    }\n    group4: {\n      - default: null\n      + default: \n      - foo: 0\n      + foo: null\n      - isNested: false\n      + isNested: none\n      + key: false\n        nest: {\n          - bar: \n          + bar: 0\n          - isNested: true\n        }\n      + someKey: true\n      - type: bas\n      + type: bar\n    }\n    language: js\n}"
 `,
 		},
 		{

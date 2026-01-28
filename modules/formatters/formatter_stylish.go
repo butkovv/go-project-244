@@ -93,7 +93,7 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 		if v.Status == compare.StatusChanged && v.IsNested {
 			changed := formatDiffStylish(v.Diff, level+1)
 			marker = "  "
-			res += offset + marker + key + ": " + changed
+			res += offset + marker + key + ": " + changed + "\n"
 		}
 	}
 	var offset string
@@ -102,7 +102,7 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 	} else {
 		offset = strings.Repeat(" ", (level-1)*INDENT_LENGTH)
 	}
-	res += offset + "}\n"
+	res += offset + "}"
 	return res
 }
 

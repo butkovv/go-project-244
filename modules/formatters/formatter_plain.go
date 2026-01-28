@@ -29,6 +29,7 @@ func formatDiffPlain(diff map[string]compare.DiffEntry, parentDir string) string
 
 	res := ""
 	for _, key := range diffKeys {
+		prefix := ""
 		v := diff[key]
 		property := key
 		if len(parentDir) > 0 {
@@ -37,18 +38,20 @@ func formatDiffPlain(diff map[string]compare.DiffEntry, parentDir string) string
 
 		v.FirstValue = formatValuePlain(v.FirstValue)
 		v.SecondValue = formatValuePlain(v.SecondValue)
-
+		if len(res) > 0 {
+			prefix = "\n"
+		}
 		if v.Status == compare.StatusAdded {
-			added := fmt.Sprintf("Property '%s' was added with value: %v\n", property, v.SecondValue)
-			res += added
+			added := fmt.Sprintf("Property '%s' was added with value: %v", property, v.SecondValue)
+			res += prefix + added
 		}
 		if v.Status == compare.StatusRemoved {
-			removed := fmt.Sprintf("Property '%s' was removed\n", property)
-			res += removed
+			removed := fmt.Sprintf("Property '%s' was removed", property)
+			res += prefix + removed
 		}
 		if v.Status == compare.StatusChanged && !v.IsNested {
-			changed := fmt.Sprintf("Property '%s' was updated. From %v to %v\n", property, v.FirstValue, v.SecondValue)
-			res += changed
+			changed := fmt.Sprintf("Property '%s' was updated. From %v to %v", property, v.FirstValue, v.SecondValue)
+			res += prefix + changed
 		}
 		if v.Status == compare.StatusChanged && v.IsNested {
 			changed := formatDiffPlain(v.Diff, property)

@@ -3,6 +3,7 @@ package formatters
 import (
 	"fmt"
 	"sort"
+	"strings"
 
 	"code/modules/compare"
 )
@@ -27,9 +28,8 @@ func formatDiffPlain(diff map[string]compare.DiffEntry, parentDir string) string
 	}
 	sort.Strings(diffKeys)
 
-	res := ""
+	res := []string{}
 	for _, key := range diffKeys {
-		prefix := ""
 		v := diff[key]
 		property := key
 		if len(parentDir) > 0 {
@@ -38,27 +38,24 @@ func formatDiffPlain(diff map[string]compare.DiffEntry, parentDir string) string
 
 		v.FirstValue = formatValuePlain(v.FirstValue)
 		v.SecondValue = formatValuePlain(v.SecondValue)
-		if len(res) > 0 {
-			prefix = "\n"
-		}
 		if v.Status == compare.StatusAdded {
 			added := fmt.Sprintf("Property '%s' was added with value: %v", property, v.SecondValue)
-			res += prefix + added
+			res = append(res, added)
 		}
 		if v.Status == compare.StatusRemoved {
 			removed := fmt.Sprintf("Property '%s' was removed", property)
-			res += prefix + removed
+			res = append(res, removed)
 		}
 		if v.Status == compare.StatusChanged && !v.IsNested {
 			changed := fmt.Sprintf("Property '%s' was updated. From %v to %v", property, v.FirstValue, v.SecondValue)
-			res += prefix + changed
+			res = append(res, changed)
 		}
 		if v.Status == compare.StatusChanged && v.IsNested {
 			changed := formatDiffPlain(v.Diff, property)
-			res += changed
+			res = append(res, changed)
 		}
 	}
-	return res
+	return strings.Join(res, "\n")
 }
 
 func FormatPlain(diff map[string]compare.DiffEntry) string {

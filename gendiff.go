@@ -1,11 +1,12 @@
 package code
 
 import (
-	"code/modules/compare"
-	"code/modules/formatters"
-	"code/modules/parsers"
+	"code/internal/compare"
+	"code/internal/formatters"
+	"code/internal/parsers"
 )
 
+// GenDiff returns a formatted diff between files at path1 and path2.
 func GenDiff(path1, path2, format string) (string, error) {
 	var err error
 	var original, changed map[string]any

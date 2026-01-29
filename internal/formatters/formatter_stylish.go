@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"code/modules/compare"
+	"code/internal/compare"
 )
 
 const INDENT_LENGTH = 4
@@ -106,6 +106,7 @@ func formatDiffStylish(diff map[string]compare.DiffEntry, level int) string {
 	return res
 }
 
+// FormatStylish formats the diff in stylish format.
 func FormatStylish(diff map[string]compare.DiffEntry) string {
 	level := 1
 	return formatDiffStylish(diff, level)

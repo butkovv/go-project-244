@@ -8,6 +8,7 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
+// ParseDataFromFile reads JSON or YAML data from path into a map.
 func ParseDataFromFile(path string) (map[string]any, error) {
 	var res map[string]any
 

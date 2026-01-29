@@ -1,9 +1,10 @@
 package formatters
 
 import (
-	"code/modules/compare"
+	"code/internal/compare"
 )
 
+// Render formats the diff using the requested format name.
 func Render(diff map[string]compare.DiffEntry, format string) string {
 	if format == "plain" {
 		return FormatPlain(diff)

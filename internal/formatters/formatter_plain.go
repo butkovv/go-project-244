@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"code/modules/compare"
+	"code/internal/compare"
 )
 
 func formatValuePlain(value any) any {
@@ -58,6 +58,7 @@ func formatDiffPlain(diff map[string]compare.DiffEntry, parentDir string) string
 	return strings.Join(res, "\n")
 }
 
+// FormatPlain formats the diff in plain-text style.
 func FormatPlain(diff map[string]compare.DiffEntry) string {
 	parentDir := ""
 	return formatDiffPlain(diff, parentDir)

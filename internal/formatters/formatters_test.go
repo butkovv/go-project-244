@@ -3,7 +3,7 @@ package formatters
 import (
 	"testing"
 
-	"code/modules/compare"
+	"code/internal/compare"
 
 	"github.com/stretchr/testify/assert"
 )

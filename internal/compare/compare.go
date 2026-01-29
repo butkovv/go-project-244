@@ -23,6 +23,7 @@ const (
 	StatusChanged   DiffStatus = "changed"
 )
 
+// IsMap reports whether v is a non-nil map value.
 func IsMap(v any) bool {
 	if v == nil {
 		return false
@@ -30,6 +31,7 @@ func IsMap(v any) bool {
 	return reflect.TypeOf(v).Kind() == reflect.Map
 }
 
+// Compare builds a diff between two maps keyed by strings.
 func Compare(first, second map[string]any) map[string]DiffEntry {
 	res := make(map[string]DiffEntry)
 

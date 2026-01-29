@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sort"
 
-	"code/modules/compare"
+	"code/internal/compare"
 )
 
 type JSONDiffElement struct {
@@ -36,6 +36,7 @@ func formatDiffJSON(diff map[string]compare.DiffEntry) []JSONDiffElement {
 	return d
 }
 
+// FormatJson formats the diff as JSON.
 func FormatJson(diff map[string]compare.DiffEntry) string {
 	res := make(map[string]any)
 	res["root"] = formatDiffJSON(diff)

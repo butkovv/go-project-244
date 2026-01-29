@@ -1,3 +1,17 @@
+/*
+Package main provides the gendiff CLI for comparing two configuration files.
+
+gendiff compares two configuration files and shows a difference. Supported formats are JSON and YAML.
+
+Usage:
+
+	gendiff [path1] [path2] [flags]
+
+The flags are:
+
+	   --format, -f
+		 									output format (default: stylish)
+*/
 package main
 
 import (

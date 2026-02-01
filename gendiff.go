@@ -6,7 +6,19 @@ import (
 	"code/internal/parsers"
 )
 
-// GenDiff returns a formatted diff between files at path1 and path2.
+// GenDiff builds a diff between two files and returns its string representation.
+//
+// The function reads data from files at path1 and path2, parses it into a data
+// structure, compares the resulting values, and formats the result according to
+// the specified format. The comparison is performed as a deep comparison of the
+// data structure, while the rendering choice is delegated to the formatter.
+//
+// The format parameter specifies the output format (for example, "plain",
+// "stylish", etc. — the exact set of supported values depends on the formatters
+// package).
+//
+// Returned errors relate to reading/parsing the input files; behavior for an
+// unsupported format is determined by formatters.Render.
 func GenDiff(path1, path2, format string) (string, error) {
 	var err error
 	var original, changed map[string]any

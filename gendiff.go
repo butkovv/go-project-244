@@ -13,8 +13,8 @@ import (
 // the specified format. The comparison is performed as a deep comparison of the
 // data structure, while the rendering choice is delegated to the formatter.
 //
-// The format parameter specifies the output format (for example, "plain",
-// "stylish", etc. — the exact set of supported values depends on the formatters
+// The format parameter specifies the output format ("plain",
+// "stylish", "json". The exact set of supported values depends on the formatters
 // package).
 //
 // Returned errors relate to reading/parsing the input files; behavior for an
